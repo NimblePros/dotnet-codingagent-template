@@ -1,0 +1,43 @@
+name: Build and Test
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+env:
+    DOTNET_VERSION: "10.x"
+    SOLUTION_PATH: "Template.slnx"
+    BUILD_CONFIGURATION: "Release"
+
+jobs:
+    build:
+        name: Build, Format Check, and Test
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup .NET SDK
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: ${{ env.DOTNET_VERSION }}
+
+            - name: Build solution
+              run: dotnet build ${{ env.SOLUTION_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }}
+
+            - name: Format check
+              uses: ardalis/github-workflows/.github/workflows/dotnet-format.yml@main
+              with:
+                  solution-or-project: ${{ env.SOLUTION_PATH }}
+                  dotnet-version: ${{ env.DOTNET_VERSION }}
+                  mode: "check"
+                  only-changed-files: true
+
+            - name: Run tests
+              run: dotnet test ${{ env.SOLUTION_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
