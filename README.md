@@ -64,7 +64,7 @@ Configuration settings are managed through:
 
 ## Development Guidelines
 
-This repository follows conventions defined in [.github/copilot-instructions.md](.github/copilot-instructions.md), including:
+This repository follows conventions defined in [AGENTS.md](AGENTS.md), including:
 
 - **Central Package Management**: All package versions managed in [Directory.Packages.props](Directory.Packages.props)
 - **Code Style**: 2-space indentation, file-scoped namespaces, Allman-style braces
