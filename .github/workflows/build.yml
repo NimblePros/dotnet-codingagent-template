@@ -32,7 +32,7 @@ jobs:
               run: dotnet build ${{ env.SOLUTION_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }}
 
             - name: Format check
-              uses: ardalis/github-workflows/.github/workflows/dotnet-format.yml@main
+              uses: nimblepros/NimblePros.GitHub.Workflows/.github/workflows/dotnet-format.yml@main
               with:
                   solution-or-project: ${{ env.SOLUTION_PATH }}
                   dotnet-version: ${{ env.DOTNET_VERSION }}

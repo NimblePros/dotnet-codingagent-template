@@ -20,6 +20,43 @@ A template repository for dotnet applications that leverage GitHub Copilot (or o
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) or later
 
+### Creating the Projects
+
+You can use `dotnet new` or `aspire new` or similar CLI commands to build out the initial projects based on what kind of application you're building.
+
+For example, the following will create a simple Aspire/AspNetApi/BlazorWebAssembly solution:
+
+```powershell
+$Solution = "Template.slnx"
+$Root = "src"
+$Prefix = "CompanyName.ProjectName"
+
+dotnet new aspire-apphost        -n "$Prefix.AppHost"         -o "$Root/$Prefix.AppHost"
+dotnet new aspire-servicedefaults -n "$Prefix.ServiceDefaults" -o "$Root/$Prefix.ServiceDefaults"
+dotnet new web                   -n "$Prefix.Web"             -o "$Root/$Prefix.Web"
+dotnet new blazorwasm            -n "$Prefix.BlazorClient"    -o "$Root/$Prefix.BlazorClient"
+dotnet new classlib              -n "$Prefix.BlazorShared"    -o "$Root/$Prefix.BlazorShared"
+
+dotnet sln $Solution add `
+  "$Root/$Prefix.AppHost/$Prefix.AppHost.csproj" `
+  "$Root/$Prefix.ServiceDefaults/$Prefix.ServiceDefaults.csproj" `
+  "$Root/$Prefix.Web/$Prefix.Web.csproj" `
+  "$Root/$Prefix.BlazorClient/$Prefix.BlazorClient.csproj" `
+  "$Root/$Prefix.BlazorShared/$Prefix.BlazorShared.csproj"
+
+dotnet add "$Root/$Prefix.Web/$Prefix.Web.csproj" reference `
+  "$Root/$Prefix.ServiceDefaults/$Prefix.ServiceDefaults.csproj" `
+  "$Root/$Prefix.BlazorShared/$Prefix.BlazorShared.csproj"
+
+dotnet add "$Root/$Prefix.BlazorClient/$Prefix.BlazorClient.csproj" reference `
+  "$Root/$Prefix.BlazorShared/$Prefix.BlazorShared.csproj"
+
+dotnet add "$Root/$Prefix.AppHost/$Prefix.AppHost.csproj" reference `
+  "$Root/$Prefix.Web/$Prefix.Web.csproj"
+
+dotnet build $Solution
+```
+
 ### Building the Solution
 
 ```bash
